@@ -1,0 +1,9 @@
+package main
+
+item ==> expiredtime + interface{} 存值和超时时间
+
+items func => IsExpired() bool 判断是否超时
+
+catce => gcintervl + items 键值对  + lock + defaultexpiredtime
+
+catce func => Set(key string,value interface{},d time.durtion),Get(),gcclean(),update(),amount(),delete(),Newcache()
