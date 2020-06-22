@@ -13,11 +13,14 @@ import (
 )
 var expiredtime=0
 var cc=kvdbimp.Newcache()
+
+
 func main(){
 	r:=gin.Default()
 	r.GET("/Get",Get)
 	r.GET("/Set",Set)
 	r.GET("/Count",Count)
+	r.GET("/Watch",Watch)
 	r.Run(":8888")
 }
 
@@ -41,12 +44,7 @@ func Set(c *gin.Context){
 	c.String(http.StatusOK,"Set ok",key,value,time.Duration(expiredtime*1000*1000*1000))
 }
 
-type Result struct {
-	Key string `json:"key"`
-	Value interface{} `json:"value"`
 
-
-}
 func Get(c *gin.Context){
 
 	key:=c.Query("key")
@@ -57,7 +55,7 @@ func Get(c *gin.Context){
 	v,b:=cc.Get(key)
 
 	log.Println("Get",key,v,b)
-	rr:=Result{}
+	rr:=kvdbimp.Result{}
 	rr.Key=key
 	rr.Value=v
 	log.Println(rr)
@@ -81,6 +79,13 @@ func Get(c *gin.Context){
 func Count(c *gin.Context){
 
 	amount:=cc.Count()
+	c.String(200, fmt.Sprintf("%v",amount))
+
+}
+
+func Watch(c *gin.Context){
+	key:=c.Query("key")
+	amount:=cc.Watch(key)
 	c.String(200, fmt.Sprintf("%v",amount))
 
 }
